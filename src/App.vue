@@ -91,38 +91,26 @@ onUnmounted(() => {
       <card-body class="flex flex-col h-full gap-4">
         <!-- Two-column layout -->
         <div class="flex gap-4">
-          
+
           <!-- Right column -->
           <div class="flex-1 flex flex-col gap-2">
             <div class="flex items-center text-sm mr-1">
               <template v-if="isConnected">
-                <div
-                  class="animate-pulse rounded-full w-3 h-3"
-                  style="background-color: #0c0"
-                />
+                <div class="animate-pulse rounded-full w-3 h-3" style="background-color: #0c0" />
                 <div class="text-sm h-full ml-1">Connected to game</div>
               </template>
               <template v-else>
-                <div
-                  class="rounded-full w-3 h-3"
-                  style="background-color: #f00"
-                />
+                <div class="rounded-full w-3 h-3" style="background-color: #f00" />
                 <div class="text-sm h-full ml-1">Not connected to game</div>
               </template>
             </div>
 
-            <div
-              ref="gameScreenRef"
-              :style="gameScreenStyle"
-              class="cursor-pointer relative bg-gray-100"
-              @mousedown="
-                (event) => {
-                  isMouseDown = true;
-                  handleSpawn(event);
-                }
-              "
-              @mouseup="isMouseDown = false"
-              @mousemove="
+            <div ref="gameScreenRef" :style="gameScreenStyle" class="cursor-pointer relative bg-gray-100" @mousedown="
+              (event) => {
+                isMouseDown = true;
+                handleSpawn(event);
+              }
+            " @mouseup="isMouseDown = false" @mousemove="
                 (event) => {
                   if (!isMouseDown) {
                     return;
@@ -130,18 +118,17 @@ onUnmounted(() => {
 
                   handleSpawn(event);
                 }
-              "
-            >
+              ">
               <div class="absolute inset-4 flex justify-center">
                 Click to spawn entity
               </div>
             </div>
           </div>
-          
+
           <!-- Left column -->
           <div class="flex-1 flex flex-col gap-2">
             <div class="text-lg">
-              Particle Tool - (In Progress)
+              Particle Tool ✨ - (In Progress)
             </div>
 
             <!--a
