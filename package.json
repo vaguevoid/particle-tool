@@ -1,0 +1,37 @@
+{
+  "name": "particle-tool",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build && bun ci:lint",
+    "preview": "vite preview",
+    "lint:fix": "eslint src --fix",
+    "ci:lint": "eslint src",
+    "ci:typecheck": "vue-tsc --noEmit -p ./tsconfig.json",
+    "generate-flatbuffers": "flatc --ts -o src/generated src/schema/editor_messages.fbs"
+  },
+  "dependencies": {
+    "@vaguevoid/tools": "0.2.20",
+    "canvas-confetti": "^1.9.3",
+    "flatbuffers": "^23.5.26",
+    "vite": "^5.4.14"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/bun": "^1.2.4",
+    "@vaguevoid/design-system": "0.1.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.21.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^16.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.25.0",
+    "vue-tsc": "^2.2.4"
+  }
+}

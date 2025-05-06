@@ -1,0 +1,10 @@
+body {
+  color: black;
+  font-size: 18px;
+  font-family: "Instrument Sans", "Roboto", "Helvetica", "Arial", sans-serif;
+
+  background-color: white;
+  background: url(/images/grid.png);
+  background-size: 80px 80px;
+  background-position: calc(50% - 3px) 50%;
+}
