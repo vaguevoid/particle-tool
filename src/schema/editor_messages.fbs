@@ -1,0 +1,66 @@
+namespace editor_messages;
+
+// Vector types
+struct Vec2 {
+  x: float;
+  y: float;
+}
+
+struct Vec3 {
+  x: float;
+  y: float;
+  z: float;
+}
+
+struct ColorRGBA {
+  r: float;
+  g: float;
+  b: float;
+  a: float;
+}
+
+struct AspectRatio {
+  width: float;
+  height: float;
+}
+
+// Component tables
+table Transform {
+  position: Vec3 (required);
+  scale: Vec2 (required);
+  skew: Vec2 (required);
+  pivot: Vec2 (required);
+  rotation: float;
+}
+
+table Color {
+  value: ColorRGBA (required);
+}
+
+table ColorRender {
+  visible: bool;
+}
+
+// Message tables
+table PingMessage {
+  timestamp: long;
+  message: string;
+}
+
+table SpawnMessage {
+  transform: Transform (required);
+  color: Color (required);
+  color_render: ColorRender (required);
+}
+
+table AspectRatioMessage {
+  aspect_ratio: AspectRatio (required);
+}
+
+union MessageType { PingMessage, SpawnMessage, AspectRatioMessage }
+
+table Message {
+  message: MessageType (required);
+}
+
+root_type Message; 
