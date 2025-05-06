@@ -97,11 +97,11 @@ onUnmounted(() => {
             <div class="flex items-center text-sm mr-1">
               <template v-if="isConnected">
                 <div class="animate-pulse rounded-full w-3 h-3" style="background-color: #0c0" />
-                <div class="text-sm h-full ml-1">Connected to game</div>
+                <div class="text-sm h-full ml-1">Connected to engine</div>
               </template>
               <template v-else>
                 <div class="rounded-full w-3 h-3" style="background-color: #f00" />
-                <div class="text-sm h-full ml-1">Not connected to game</div>
+                <div class="text-sm h-full ml-1">Not connected to engine</div>
               </template>
             </div>
 
@@ -111,16 +111,16 @@ onUnmounted(() => {
                 handleSpawn(event);
               }
             " @mouseup="isMouseDown = false" @mousemove="
-                (event) => {
-                  if (!isMouseDown) {
-                    return;
-                  }
-
-                  handleSpawn(event);
+              (event) => {
+                if (!isMouseDown) {
+                  return;
                 }
-              ">
+
+                handleSpawn(event);
+              }
+            ">
               <div class="absolute inset-4 flex justify-center">
-                Click to spawn entity
+
               </div>
             </div>
           </div>
