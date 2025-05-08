@@ -1,23 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from "vue";
-import { aspectRatio } from "./services/websocket";
-import DraggableNumberInput from "./components/DraggableNumberInput.vue"
 import ParticleInput from "./components/ParticleInput.vue";
 import SectionPill from "./components/SectionPill.vue";
 
 const gameScreenRef = ref<HTMLDivElement | null>(null);
 
 const gameScreenStyle = computed(() => {
-  if (!aspectRatio.value) {
-    return {
-      width: "100%",
-      maxWidth: "800px",
-    };
-  }
-
-  const { width, height } = aspectRatio.value;
   return {
-    aspectRatio: `${width}/${height}`,
     width: "100%",
     maxWidth: "800px",
   };
@@ -73,12 +62,12 @@ function test_func_2() {
 
       <!------------ Center Panel ----------->
       <div ref="gameScreenRef" :style="gameScreenStyle" class="cursor-pointer relative bg-gray-100" @mousedown="
-        (event) => {
+        () => {
           // Process Event here
           test_func_1();
         }
       " @mouseup="
-        (event) => {
+        () => {
           test_func_2();
         }
       ">
@@ -96,7 +85,7 @@ function test_func_2() {
         <!----------- SPAWN  ----------->
         <div class="p-2"><b>Spawn</b></div>
 
-        <div class="particle_input">
+        <div class="flex items-center justify-between p-2">
           <label for="burst_spawn" class="w-[75%]">Burst</label>
           <input type="checkbox" id="burst_spawn" class="w-25 h-5">
         </div>
@@ -176,10 +165,6 @@ main {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   gap: 20px;
-}
-
-.particle_input {
-  @apply flex items-center justify-between p-2;
 }
 
 .fiasco .card {
