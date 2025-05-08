@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from "vue";
 import { aspectRatio } from "./services/websocket";
-import DraggableNumberInput from './components/DraggableNumberInput.vue'
-import SectionPill from "./components/SectionPill.vue";
+import DraggableNumberInput from "./components/DraggableNumberInput.vue"
 import ParticleInput from "./components/ParticleInput.vue";
+import SectionPill from "./components/SectionPill.vue";
 
 const gameScreenRef = ref<HTMLDivElement | null>(null);
 
@@ -46,7 +46,7 @@ function test_func_2() {
 
     <div class="grid-container">
 
-      <!-- Left Panel -->
+      <!------------ Left Panel ----------->
       <div class="flex flex-col gap-y-8">
         <!-- Emitters -->
         <div class="h-[30%] card">
@@ -71,7 +71,7 @@ function test_func_2() {
         </div>
       </div>
 
-      <!-- Center Panel -->
+      <!------------ Center Panel ----------->
       <div ref="gameScreenRef" :style="gameScreenStyle" class="cursor-pointer relative bg-gray-100" @mousedown="
         (event) => {
           // Process Event here
@@ -87,238 +87,77 @@ function test_func_2() {
         <p style="font-size: 120px;"><br><br><br><br><br>✨ ✨</p>
       </div>
 
-      <!-- Right Panel -->
+      <!------------ Right Panel ----------->
       <div class="flex-grow card h-full">
         <div>
           <SectionPill name="Particles:" />
         </div>
 
         <!----------- SPAWN  ----------->
-        <div>
-          <div class="p-2"><b>Spawn</b></div>
+        <div class="p-2"><b>Spawn</b></div>
 
-          <!-- Burst -->
-          <div class="particle_input">
-            <label for="burst_spawn" class="w-[75%]">Burst</label>
-            <input type="checkbox" id="burst_spawn" class="w-25 h-5">
-          </div>
-
-          <!-- Rate -->
-          <div class="particle_input">
-            <label for="rate" class="w-[75%]">Rate</label>
-            <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-          </div>
-
-          <!-- Lifetime -->
-          <ParticleInput
-  label="Custom Name"
-  inputId="custom-rate"
-  inputName="CustomRate"
-  :containerClass="'custom-container'"
-  :labelClass="'w-[80%]'"
-  :inputClass="'w-24 h-6'"
-  :valueChanged="test_func_1"
-  :onClick="test_func_2"
-/>
-
-
-          <!--div class="particle_input">
-            <label for="rate" class="w-[75%]">Lifetime</label>
-            <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-          </div-->
-
-          <!-- Angle -->
-          <div class="particle_input">
-            <label for="rate" class="w-[75%]">Angle</label>
-            <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-          </div>
-
-          <!-- Points Forward -->
-          <div class="particle_input">
-            <label for="points_forward" class="w-[75%]">Points Forward</label>
-            <input type="checkbox" id="points_forward" class="w-5 h-5">
-          </div>
+        <div class="particle_input">
+          <label for="burst_spawn" class="w-[75%]">Burst</label>
+          <input type="checkbox" id="burst_spawn" class="w-25 h-5">
         </div>
+
+        <ParticleInput labelText="Rate:" inputId="rate" inputName="Rate" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Lifetime:" inputId="life" inputName="Life" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Angle:" inputId="angle" inputName="Angle" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Points Forward:" inputId="forward" inputName="forward" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
 
         <!----------- Speed  ----------->
-        <div>
-          <div class="p-2"><b>Speed</b></div>
-          <!-- Initial Speed -->
-          <div class="particle_input">
-            <label for="rate" class="w-[75%]">Initial Speed:</label>
-            <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-          </div>
+        <div class="p-2"><b>Speed</b></div>
 
-          <!-- End Speed -->
-          <div class="particle_input">
-            <label for="rate" class="w-[75%]">Gravity:</label>
-            <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-          </div>
-        </div>
+        <ParticleInput labelText="Start Speed:" inputId="startSpeed" inputName="startSpeed"
+          :onValueChanged="test_func_1" :onClick="test_func_2" />
+
+        <ParticleInput labelText="End Speed:" inputId="StartSpeed" inputName="StartSpeed" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
 
         <!----------- Visibility  ----------->
-        <div class="p-2"><b>Visibility</b></div>
-        <!-- Fade In -->
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Fade In:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-
-        <!-- Fade Out -->
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Fade Out:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
+        <ParticleInput labelText="Fade In:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+        <ParticleInput labelText="Fade Out:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
 
 
         <!----------- Rotation  ----------->
         <div class="p-2"><b>Rotation</b></div>
-        <div class="particle_input">
-          <label for="rotation" class="w-[75%]">Start Rotation:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-        <div class="particle_input">
-          <label for="min_random" class="w-[75%]">Min Random:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-        <div class="particle_input">
-          <label for="max_random" class="w-[75%]">Max Random:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
+        <ParticleInput labelText="Start Rotation:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Min Rand Rotation:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Max Rand Rotation:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
 
         <!----------- Trail  ----------->
         <div class="p-2"><b>Trail</b></div>
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Min Random:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Trail Lifetime:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Trail Width:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
-        <div class="particle_input">
-          <label for="rate" class="w-[75%]">Max Random:</label>
-          <DraggableNumberInput @value-changed="
-              (newValue: any) => {
-                test_func_1()
-              }
-            " @click="
-              () => {
-                test_func_2()
-              }
-            " id="rate" name="Rate" class="w-20 h-5" />
-        </div>
+        <ParticleInput labelText="Trail Lifetime:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Trail Width:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Min Random:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
+
+        <ParticleInput labelText="Max Random:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          :onClick="test_func_2" />
       </div>
     </div>
-
   </main>
 </template>
 

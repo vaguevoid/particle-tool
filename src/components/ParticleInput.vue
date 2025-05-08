@@ -1,26 +1,34 @@
-<script>
-import { defineComponent } from 'vue';
-import DraggableNumberInput from './DraggableNumberInput.vue'
+<script setup lang="ts">
+import DraggableNumberInput from './DraggableNumberInput.vue';
 
-export default defineComponent({
-    name: "ParticleInput",
-    props: {
-        label: { type: String, default: 'Adjustable-Name' },
-        inputId: { type: String, default: 'rate' },
-        inputName: { type: String, default: 'Rate' },
-        containerClass: { type: String, default: 'BBBBBBBBB' },
-        labelClass: { type: String, default: 'w-[75%]' },
-        inputClass: { type: String, default: 'w-20 h-5' },
-        valueChanged: { type: Function, default: () => { } },
-        onClick: { type: Function, default: () => { } }
-    }
+// Define the props our component will accept.
+const props = withDefaults(defineProps<{
+  labelText: string;                   // Customizable label text
+  inputId: string;                     // Customizable id attribute
+  inputName: string;                   // Customizable name
+  onValueChanged: (newValue: any) => void; // Customizable function for the value-changed event
+  onClick: () => void;                 // Customizable function for the click event
+  containerClass?: string;             // Optional: default classes for the outer div
+  labelClass?: string;                 // Optional: default classes for the label
+  inputClass?: string;                 // Optional: default classes for the DraggableNumberInput
+}>(), {
+  containerClass: 'ParticleInput',
+  labelClass: 'w-[75%]',
+  inputClass: 'w-[25%] h-5'
 });
 </script>
 
 <template>
-    <div :class="containerClass">
-        <label :for="inputId" :class="labelClass">{{ label }}</label>
-        <DraggableNumberInput @value-changed="(newValue) => valueChanged(newValue)" @click="onClick" :id="inputId"
-            :name="inputName" :class="inputClass" />
-    </div>
+  <div class="flex items-center justify-between p-2">
+    <label :for="inputId" :class="labelClass">
+      {{ labelText }}
+    </label>
+    <DraggableNumberInput
+      :id="inputId"
+      :name="inputName"
+      :class="inputClass"
+      @value-changed="onValueChanged"
+      @click="onClick"
+    />
+</div>
 </template>
