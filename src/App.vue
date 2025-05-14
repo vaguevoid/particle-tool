@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, onUnmounted } from "vue";
 import ParticleInput from "./components/ParticleInput.vue";
 import SectionPill from "./components/SectionPill.vue";
-
+import CollapsibleSection from "./components/CollapsibleSection.vue"
 const gameScreenRef = ref<HTMLDivElement | null>(null);
 
 const gameScreenStyle = computed(() => {
@@ -79,49 +79,54 @@ function test_func_2() {
       <!------------ Right Panel ----------->
       <div class="flex-grow card h-full">
         <div>
-          <SectionPill name="Particles:" />
+          <SectionPill name="Spawn"/>
         </div>
 
         <!----------- SPAWN  ----------->
-        <div class="p-2"><b>Spawn</b></div>
+        <CollapsibleSection name="Spawn">
 
-        <div class="flex items-center justify-between p-2">
-          <label for="burst_spawn" class="w-[75%]">Burst</label>
-          <input type="checkbox" id="burst_spawn" class="w-25 h-5">
-        </div>
+          <div class="flex items-center justify-between p-2">
+            <label for="burst_spawn" class="w-[75%]">Burst</label>
+            <input type="checkbox" id="burst_spawn" class="w-25 h-5">
+          </div>
 
-        <ParticleInput labelText="Rate:" inputId="rate" inputName="Rate" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
+          <ParticleInput labelText="Rate:" inputId="rate" inputName="Rate" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
 
-        <ParticleInput labelText="Lifetime:" inputId="life" inputName="Life" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
+          <ParticleInput labelText="Lifetime:" inputId="life" inputName="Life" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
 
-        <ParticleInput labelText="Angle:" inputId="angle" inputName="Angle" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
+          <ParticleInput labelText="Angle:" inputId="angle" inputName="Angle" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
 
-        <ParticleInput labelText="Points Forward:" inputId="forward" inputName="forward" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
+          <ParticleInput labelText="Points Forward:" inputId="forward" inputName="forward" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
+        </CollapsibleSection>
 
 
         <!----------- Speed  ----------->
-        <div class="p-2"><b>Speed</b></div>
+        <CollapsibleSection name="Speed">
 
         <ParticleInput labelText="Start Speed:" inputId="startSpeed" inputName="startSpeed"
           :onValueChanged="test_func_1" :onClick="test_func_2" />
 
         <ParticleInput labelText="End Speed:" inputId="StartSpeed" inputName="StartSpeed" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
-
+        </CollapsibleSection>
 
         <!----------- Visibility  ----------->
+        <CollapsibleSection name="Visibility">
+
         <ParticleInput labelText="Fade In:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
+
         <ParticleInput labelText="Fade Out:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
-
+        </CollapsibleSection>
+        
 
         <!----------- Rotation  ----------->
-        <div class="p-2"><b>Rotation</b></div>
+        <CollapsibleSection name="Rotation">
         <ParticleInput labelText="Start Rotation:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
 
@@ -130,10 +135,10 @@ function test_func_2() {
 
         <ParticleInput labelText="Max Rand Rotation:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
-
+        </CollapsibleSection>
 
         <!----------- Trail  ----------->
-        <div class="p-2"><b>Trail</b></div>
+        <CollapsibleSection name="Trail">
         <ParticleInput labelText="Trail Lifetime:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
 
@@ -145,6 +150,7 @@ function test_func_2() {
 
         <ParticleInput labelText="Max Random:" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
+        </CollapsibleSection>
       </div>
     </div>
   </main>
