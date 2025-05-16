@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DraggableNumberInput from './DraggableNumberInput.vue';
+import Checkbox from './Checkbox.vue';
 
 // Define the props our component will accept.
 const props = withDefaults(defineProps<{
@@ -11,12 +11,10 @@ const props = withDefaults(defineProps<{
   containerClass?: string;             // Optional: default classes for the outer div
   labelClass?: string;                 // Optional: default classes for the label
   inputClass?: string;                 // Optional: default classes for the DraggableNumberInput
-  inputLabels?: string[];
 }>(), {
   containerClass: 'ParticleInput',
   labelClass: 'w-[75%]',
-  inputClass: 'w-[25%] h-5',
-  inputLabels: () => [""],
+  inputClass: 'w-[25%] h-5'
 });
 </script>
 
@@ -25,11 +23,10 @@ const props = withDefaults(defineProps<{
     <label :for="inputId" :class="labelClass">
       {{ labelText }}
     </label>
-    <DraggableNumberInput v-for="label in inputLabels"
+    <Checkbox
       :id="inputId"
       :name="inputName"
       :class="inputClass"
-      :leftText="label || ''"
       @value-changed="onValueChanged"
       @click="onClick"
     />
