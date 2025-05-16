@@ -2,8 +2,12 @@
 import { ref, onMounted, computed, onUnmounted } from "vue";
 import ParticleInput from "./components/ParticleInput.vue";
 import SectionPill from "./components/SectionPill.vue";
-import CollapsibleSection from "./components/CollapsibleSection.vue"
-import ParticleCheckbox from "./components/ParticleCheckbox.vue"
+import CollapsibleSection from "./components/CollapsibleSection.vue";
+import ParticleCheckbox from "./components/ParticleCheckbox.vue";
+import Emitters from "./components/Emitters.vue";
+import textureInput from "./components/TextureInput.vue"
+import TextureInput from "./components/TextureInput.vue";
+import ColorInput from "./components/ColorInput.vue"
 const gameScreenRef = ref<HTMLDivElement | null>(null);
 
 const gameScreenStyle = computed(() => {
@@ -41,16 +45,20 @@ function test_func_2() {
         <!-- Emitters -->
         <div class="h-[30%] card">
           <SectionPill name="Emitters" />
-          <div class="p-2">
+          <Emitters :emitters="['/images/spark_01.png', '/images/smoke_10.png','/images/muzzle_01.png']"/>
+          <!-- <div class="p-2">
             Example: Emitter data goes here...
-          </div>
+          </div> -->
         </div>
 
         <!-- Texture -->
         <div class="h-[25%] card">
           <SectionPill name="Textures" />
           <div class="p-2">
-            Example: Texture data goes here...
+            <TextureInput labelText="Shape" inputId="shape" inputName="Shape" texture="./images/spark_01.png" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
+            <ColorInput labelText="Shape" inputId="shape" inputName="Shape" color="#6659FF" :onValueChanged="test_func_1"
+            :onClick="test_func_2" />
           </div>
         </div>
 
