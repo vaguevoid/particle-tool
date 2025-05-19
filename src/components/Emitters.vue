@@ -1,16 +1,20 @@
 <script setup lang="ts">
+import {ref} from 'vue';
+import EmitterButton from './EmitterButton.vue';
 defineProps<{
     emitters: string[];
 }>();
+const activeIndex = ref(-1);
 </script>
 
 <template>
-    <div class="container grid-cols-3 text-center">
-        <div v-for="(emitter, index) in emitters">
-            <img :src="emitter" alt=""/> 
-            <span>Emitter {{ index + 1 }}</span>
+    <div class="container">
+        <div v-for="(emitter, index) in emitters" class="grid-item">
+            <EmitterButton :name="`Emitter ${index + 1}`" :image_path="emitter" :active="activeIndex === index" @click="activeIndex = index"/>
+            <!-- <img :src="emitter" alt=""/> 
+            <span>Emitter {{ index + 1 }}</span> -->
         </div>
-        <div>
+        <div class="grid-item">
             <button class = "button"> + </button>
         </div>
     </div>
@@ -32,8 +36,16 @@ defineProps<{
 }
 .container {
     display: grid;
-    align-items: center;
-    max-width: 200px;
+    grid-template-columns: repeat(auto-fit, 80px);
+    justify-content: start;
+    padding-bottom: 16px;
 }
-
+.grid-item {
+    width: 64px;
+    height: 64px;
+    display: flex;                /* Enable flexbox */
+    flex-direction: column;       /* Stack children vertically */
+    align-items: center;          /* Center horizontally */
+    justify-content: center;      /* Center vertically */
+}
 </style>

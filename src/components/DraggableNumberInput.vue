@@ -78,7 +78,7 @@ function dragEnd(): void {
         :step="props.step"
         :value="props.value"
         @input="adjustValue(($event.target as HTMLInputElement).value)"
-        :style="{ paddingLeft: leftText }"
+        :style="{ paddingLeft: leftText ? '3rem' : '' }"
       >
       <i
         class="iconoir-settings p-1 text-pluetral-400"

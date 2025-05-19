@@ -43,7 +43,7 @@ function test_func_2() {
       <!------------ Left Panel ----------->
       <div class="flex flex-col gap-y-8">
         <!-- Emitters -->
-        <div class="h-[30%] card">
+        <div class="card">
           <SectionPill name="Emitters" />
           <Emitters :emitters="['/images/spark_01.png', '/images/smoke_10.png','/images/muzzle_01.png']"/>
           <!-- <div class="p-2">
@@ -52,7 +52,7 @@ function test_func_2() {
         </div>
 
         <!-- Texture -->
-        <div class="h-[25%] card">
+        <div class="card">
           <SectionPill name="Textures" />
           <div class="p-2">
             <TextureInput labelText="Shape" inputId="shape" inputName="Shape" texture="./images/spark_01.png" :onValueChanged="test_func_1"
@@ -63,7 +63,7 @@ function test_func_2() {
         </div>
 
         <!-- Emissions -->
-        <div class="flex-grow card">
+        <div class="card h-full">
           <div>
             <SectionPill name="Emission" />
           </div>
