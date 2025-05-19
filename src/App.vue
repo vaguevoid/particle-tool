@@ -8,13 +8,37 @@ import Emitters from "./components/Emitters.vue";
 import textureInput from "./components/TextureInput.vue"
 import TextureInput from "./components/TextureInput.vue";
 import ColorInput from "./components/ColorInput.vue"
+import ParticlePreview from "./components/ParticlePreview.vue";
+import type { ComponentPublicInstance } from 'vue';
+
 const gameScreenRef = ref<HTMLDivElement | null>(null);
+const particlePreviewRef = ref<ComponentPublicInstance<{ handlePlay: () => void }> | null>(null);
 
 const gameScreenStyle = computed(() => {
   return {
     width: "100%",
     maxWidth: "800px",
   };
+});
+
+// Gather control values from the right panel (example, you may need to adjust input bindings)
+const controls = ref({
+  burst: false,
+  amount: 2.4,
+  particleLifetime: 2.75,
+  startSpeed: 0.82,
+  gravity: 0,
+  startSize: 0.42,
+  endSize: 0.01,
+  sizeMultiplier: 10.0,
+  fadeInPoint: 0.07,
+  fadeOutPoint: 0.21,
+  startRotation: 0,
+  minRandomSpin: 25,
+  maxRandomSpin: 90,
+  trailLifetime: 0.09,
+  trailWidth: 0.05,
+  color: '#6659FF', // Example, wire up to ColorInput if needed
 });
 
 onMounted(() => { });
@@ -27,6 +51,10 @@ function test_func_1() {
 
 function test_func_2() {
   console.log("test_func_2() called");
+}
+
+function playParticles() {
+  particlePreviewRef.value?.handlePlay();
 }
 
 </script>
@@ -79,19 +107,9 @@ function test_func_2() {
       </div>
 
       <!------------ Center Panel ----------->
-      <div ref="gameScreenRef" :style="gameScreenStyle" class="cursor-pointer relative bg-gray-100" @mousedown="
-        () => {
-          // Process Event here
-          test_func_1();
-        }
-      " @mouseup="
-        () => {
-          test_func_2();
-        }
-      ">
-
-        <br>&nbsp; &nbsp;Camera Viewport goes here
-        <p style="font-size: 120px;"><br><br><br><br><br>✨ ✨</p>
+      <div class="relative bg-gray-100 flex flex-col items-center justify-center" style="width: 100%; max-width: 800px; min-height: 400px;">
+        <ParticlePreview ref="particlePreviewRef" :controls="controls" style="width:100%;height:400px;" />
+        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded" @click="playParticles">Play</button>
       </div>
 
       <!------------ Right Panel ----------->
@@ -124,7 +142,7 @@ function test_func_2() {
         <CollapsibleSection name="Speed">
 
         <ParticleInput labelText="Start Speed" inputId="startSpeed" inputName="startSpeed"
-          :onValueChanged="test_func_1" :onClick="test_func_2" />
+          :onValueChanged="val => controls.startSpeed = val" :onClick="test_func_2" />
 
         <ParticleInput labelText="End Speed" inputId="StartSpeed" inputName="StartSpeed" :onValueChanged="test_func_1"
           :onClick="test_func_2" />
