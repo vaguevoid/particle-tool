@@ -5,12 +5,11 @@ const props = defineProps<{
   controls?: {
     burst: boolean
     amount: number
-    particleLifetime: number
+    lifetime: number
     startSpeed: number
     gravity: number
     startSize: number
     endSize: number
-    sizeMultiplier: number
     fadeInPoint: number
     fadeOutPoint: number
     startRotation: number
@@ -19,6 +18,9 @@ const props = defineProps<{
     trailLifetime: number
     trailWidth: number
     color?: string
+    spawnRate: number
+    acceleration: number
+    texture: string
   }
 }>()
 
@@ -39,6 +41,8 @@ const particles = ref<Particle[]>([])
 const canvas = ref<HTMLCanvasElement | null>(null)
 const ctx = ref<CanvasRenderingContext2D | null>(null)
 const animationFrame = ref<number | null>(null)
+const lastSpawnTime = ref<number>(0)
+const particleTexture = ref<HTMLImageElement | null>(null)
 
 const createParticle = () => {
   const centerX = canvas.value?.width ? canvas.value.width / 2 : 0
@@ -47,12 +51,11 @@ const createParticle = () => {
   const controls = props.controls || {
     burst: false,
     amount: 2.4,
-    particleLifetime: 2.75,
+    lifetime: 2.75,
     startSpeed: 0.82,
     gravity: 0,
-    startSize: 0.42,
-    endSize: 0.01,
-    sizeMultiplier: 10.0,
+    startSize: 10,
+    endSize: 2,
     fadeInPoint: 0.07,
     fadeOutPoint: 0.21,
     startRotation: 0,
@@ -61,9 +64,12 @@ const createParticle = () => {
     trailLifetime: 0.09,
     trailWidth: 0.05,
     color: '#ff5722',
+    spawnRate: 0.1,
+    acceleration: 0,
+    texture: '/images/star_01.png',
   }
   
-  const numParticles = Math.floor(controls.amount * 10)
+  const numParticles = Math.floor(controls.amount)
   for (let i = 0; i < numParticles; i++) {
     const angle = Math.random() * Math.PI * 2
     const speed = controls.startSpeed * (1 + Math.random() * 0.5)
@@ -76,8 +82,8 @@ const createParticle = () => {
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       life: 0,
-      maxLife: controls.particleLifetime * (0.8 + Math.random() * 0.4),
-      size: controls.startSize * controls.sizeMultiplier * (0.8 + Math.random() * 0.4),
+      maxLife: controls.lifetime * (0.8 + Math.random() * 0.4),
+      size: controls.startSize * (0.8 + Math.random() * 0.4),
       color: controls.color || '#ff5722',
       rotation: startRotationRad,
       angularVelocity: minSpinRad + Math.random() * (maxSpinRad - minSpinRad)
@@ -85,18 +91,32 @@ const createParticle = () => {
   }
 }
 
+const loadTexture = () => {
+  const controls = props.controls || {}
+  if (controls.texture) {
+    const img = new Image()
+    img.onload = () => {
+      particleTexture.value = img
+    }
+    img.src = controls.texture
+  }
+}
+
+watch(() => props.controls?.texture, () => {
+  loadTexture()
+})
+
 const updateParticles = () => {
   if (!ctx.value) return
   ctx.value.clearRect(0, 0, canvas.value?.width || 0, canvas.value?.height || 0)
   const controls = props.controls || {
     burst: false,
     amount: 2.4,
-    particleLifetime: 2.75,
+    lifetime: 2.75,
     startSpeed: 0.82,
     gravity: 0,
-    startSize: 0.42,
-    endSize: 0.01,
-    sizeMultiplier: 10.0,
+    startSize: 10,
+    endSize: 2,
     fadeInPoint: 0.07,
     fadeOutPoint: 0.21,
     startRotation: 0,
@@ -105,10 +125,33 @@ const updateParticles = () => {
     trailLifetime: 0.09,
     trailWidth: 0.05,
     color: '#ff5722',
+    spawnRate: 0.1,
+    acceleration: 0,
+    texture: '/images/star_01.png'
   }
+
+  // Handle continuous spawning when burst is false
+  if (!controls.burst) {
+    const currentTime = performance.now()
+    const timeSinceLastSpawn = (currentTime - lastSpawnTime.value) / 1000 // Convert to seconds
+    if (timeSinceLastSpawn >= 1 / controls.spawnRate) {
+      createParticle()
+      lastSpawnTime.value = currentTime
+    }
+  }
+
   particles.value = particles.value.filter(particle => {
     particle.life += 0.016
     if (particle.life >= particle.maxLife) return false
+
+    // Apply acceleration to velocity
+    const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy)
+    if (speed > 0) {
+      const accelerationFactor = 1 + (controls.acceleration * 0.016)
+      particle.vx *= accelerationFactor
+      particle.vy *= accelerationFactor
+    }
+
     particle.x += particle.vx
     particle.y += particle.vy
     particle.vy += controls.gravity * 0.1
@@ -120,19 +163,57 @@ const updateParticles = () => {
     } else if (lifeRatio > controls.fadeOutPoint) {
       alpha = 1.0 - ((lifeRatio - controls.fadeOutPoint) / (1.0 - controls.fadeOutPoint))
     }
-    const currentSize = controls.startSize + (controls.endSize - controls.startSize) * lifeRatio
-    const size = currentSize * controls.sizeMultiplier * (1 - alpha * 0.5)
+    const size = controls.startSize + (controls.endSize - controls.startSize) * lifeRatio
+    
     ctx.value!.save()
     ctx.value!.translate(particle.x, particle.y)
     ctx.value!.rotate(particle.rotation)
-    ctx.value!.fillStyle = `${particle.color}${Math.floor(alpha * 255).toString(16).padStart(2, '0')}`
-    ctx.value!.beginPath()
-    ctx.value!.arc(0, 0, size, 0, Math.PI * 2)
-    ctx.value!.fill()
+    ctx.value!.globalAlpha = alpha
+
+    if (particleTexture.value) {
+      const baseSize = 32 // Base size of the texture
+      const drawSize = baseSize * size // Multiply by the size factor
+      
+      // Create a temporary canvas for color tinting
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = drawSize
+      tempCanvas.height = drawSize
+      const tempCtx = tempCanvas.getContext('2d')!
+      
+      // Draw the texture
+      tempCtx.drawImage(
+        particleTexture.value,
+        0, 0,
+        drawSize,
+        drawSize
+      )
+      
+      // Apply color tint
+      tempCtx.globalCompositeOperation = 'source-in'
+      tempCtx.fillStyle = particle.color
+      tempCtx.fillRect(0, 0, drawSize, drawSize)
+      
+      // Draw the tinted texture
+      ctx.value!.drawImage(
+        tempCanvas,
+        -drawSize / 2,
+        -drawSize / 2,
+        drawSize,
+        drawSize
+      )
+    } else {
+      // Fallback to circle if no texture is loaded
+      ctx.value!.fillStyle = `${particle.color}${Math.floor(alpha * 255).toString(16).padStart(2, '0')}`
+      ctx.value!.beginPath()
+      ctx.value!.arc(0, 0, size, 0, Math.PI * 2)
+      ctx.value!.fill()
+    }
+    
     ctx.value!.restore()
     return true
   })
-  if (particles.value.length > 0) {
+  
+  if (particles.value.length > 0 || !controls.burst) {
     animationFrame.value = requestAnimationFrame(updateParticles)
   } else {
     animationFrame.value = null
@@ -145,7 +226,32 @@ const handlePlay = () => {
     animationFrame.value = null
   }
   particles.value = []
-  createParticle()
+  lastSpawnTime.value = performance.now()
+  
+  const controls = props.controls || {
+    burst: false,
+    amount: 2.4,
+    lifetime: 2.75,
+    startSpeed: 0.82,
+    gravity: 0,
+    startSize: 10,
+    endSize: 2,
+    fadeInPoint: 0.07,
+    fadeOutPoint: 0.21,
+    startRotation: 0,
+    minRandomSpin: 25,
+    maxRandomSpin: 90,
+    trailLifetime: 0.09,
+    trailWidth: 0.05,
+    color: '#ff5722',
+    spawnRate: 0.1,
+    acceleration: 0,
+    texture: '/images/star_01.png'
+  }
+
+  if (controls.burst) {
+    createParticle()
+  }
   animationFrame.value = requestAnimationFrame(updateParticles)
 }
 
@@ -167,6 +273,7 @@ const initCanvas = () => {
 
 onMounted(() => {
   initCanvas()
+  loadTexture()
 })
 
 onUnmounted(() => {
@@ -179,7 +286,7 @@ onUnmounted(() => {
 
 <template>
   <div class="preview-area">
-    <canvas ref="canvas"></canvas>
+    <canvas ref="canvas" class="canvas"></canvas>
   </div>
 </template>
 
@@ -189,11 +296,8 @@ onUnmounted(() => {
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: white url(/images/grid.png);
-  background-size: 80px 80px;
-  background-position: calc(50% - 3px) 50%;
 }
-canvas {
+.canvas {
   position: absolute;
   top: 0;
   left: 0;
