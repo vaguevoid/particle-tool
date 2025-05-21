@@ -42,6 +42,8 @@ const controls = ref({
   spawnRate: 0.1,
   acceleration: 0,
   texture: '/images/star_01.png',
+  minSpawnAngle: 0,
+  maxSpawnAngle: 360
 });
 
 onMounted(() => { });
@@ -69,7 +71,7 @@ function playParticles() {
         https://github.com/vaguevoid/particle-tool</span></div>
     <br>
 
-    <div class="grid-container">
+    <div class="grid-container ">
 
       <!------------ Left Panel ----------->
       <div class="flex flex-col gap-y-8">
@@ -110,9 +112,13 @@ function playParticles() {
       </div>
 
       <!------------ Center Panel ----------->
-      <div class="flex flex-col">
+      <div class="flex flex-col items-center">
         <ParticlePreview ref="particlePreviewRef" :controls="controls" style="width:100%;height:100%;" />
-        <button class="mt-4 px-4 py-2 bg-blue-500 text-black rounded" @click="playParticles">Play</button>
+        <div class="card">
+          <button class="button p-2 w-8" @click="playParticles">
+            <img src="/images/play.png" alt="">
+          </button>
+        </div>
       </div>
 
       <!------------ Right Panel ----------->
@@ -130,6 +136,12 @@ function playParticles() {
             :onClick="test_func_2" />
           
           <ParticleInput labelText="Rate" inputId="rate" inputName="Rate" :onValueChanged="val => controls.spawnRate = val"
+            :onClick="test_func_2" />
+          
+          <ParticleInput labelText="Min Angle" inputId="min_angle" inputName="min_angle" :onValueChanged="val => controls.minSpawnAngle = val"
+            :onClick="test_func_2" />
+          
+          <ParticleInput labelText="Max Angle" inputId="max_angle" inputName="max_angle" :onValueChanged="val => controls.maxSpawnAngle = val"
             :onClick="test_func_2" />
 
           <ParticleInput labelText="Lifetime" inputId="life" inputName="Life" :onValueChanged="val => controls.lifetime = val"
@@ -175,13 +187,13 @@ function playParticles() {
         
         <!----------- Rotation  ----------->
         <CollapsibleSection name="Rotation">
-          <ParticleInput labelText="Start Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          <ParticleInput labelText="Start Rotation" inputId="StartRotation" inputName="StartRotation" :onValueChanged="val => controls.startRotation = val"
             :onClick="test_func_2" />
 
-          <ParticleInput labelText="Min Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          <ParticleInput labelText="Min Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="val => controls.minRandomSpin = val"
             :onClick="test_func_2" />
 
-          <ParticleInput labelText="Max Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
+          <ParticleInput labelText="Max Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="val => controls.maxRandomSpin = val"
             :onClick="test_func_2" />
         </CollapsibleSection>
 
@@ -242,4 +254,5 @@ main {
   line-height: 15px;
   display: inline-block;
 }
+
 </style>

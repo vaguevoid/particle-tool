@@ -17,10 +17,12 @@ const props = defineProps<{
     maxRandomSpin: number
     trailLifetime: number
     trailWidth: number
-    color?: string
+    color: string
     spawnRate: number
     acceleration: number
     texture: string
+    minSpawnAngle: number
+    maxSpawnAngle: number
   }
 }>()
 
@@ -67,11 +69,17 @@ const createParticle = () => {
     spawnRate: 0.1,
     acceleration: 0,
     texture: '/images/star_01.png',
+    minSpawnAngle: 0,
+    maxSpawnAngle: 360
   }
   
   const numParticles = Math.floor(controls.amount)
   for (let i = 0; i < numParticles; i++) {
-    const angle = Math.random() * Math.PI * 2
+    // Convert angles to radians and calculate random angle within range
+    const minAngleRad = (controls.minSpawnAngle * Math.PI) / 180
+    const maxAngleRad = (controls.maxSpawnAngle * Math.PI) / 180
+    const angle = minAngleRad + Math.random() * (maxAngleRad - minAngleRad)
+    
     const speed = controls.startSpeed * (1 + Math.random() * 0.5)
     const startRotationRad = (controls.startRotation * Math.PI) / 180
     const minSpinRad = (controls.minRandomSpin * Math.PI) / 180
@@ -84,7 +92,7 @@ const createParticle = () => {
       life: 0,
       maxLife: controls.lifetime * (0.8 + Math.random() * 0.4),
       size: controls.startSize * (0.8 + Math.random() * 0.4),
-      color: controls.color || '#ff5722',
+      color: controls.color,
       rotation: startRotationRad,
       angularVelocity: minSpinRad + Math.random() * (maxSpinRad - minSpinRad)
     })
@@ -127,7 +135,9 @@ const updateParticles = () => {
     color: '#ff5722',
     spawnRate: 0.1,
     acceleration: 0,
-    texture: '/images/star_01.png'
+    texture: '/images/star_01.png',
+    minSpawnAngle: 0,
+    maxSpawnAngle: 360
   }
 
   // Handle continuous spawning when burst is false
@@ -246,7 +256,9 @@ const handlePlay = () => {
     color: '#ff5722',
     spawnRate: 0.1,
     acceleration: 0,
-    texture: '/images/star_01.png'
+    texture: '/images/star_01.png',
+    minSpawnAngle: 0,
+    maxSpawnAngle: 360
   }
 
   if (controls.burst) {
