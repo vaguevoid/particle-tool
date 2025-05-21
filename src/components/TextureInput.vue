@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import {ref} from 'vue';
 // Define the props our component will accept.
 const props = withDefaults(defineProps<{
   labelText: string;                   // Customizable label text
@@ -16,6 +16,26 @@ const props = withDefaults(defineProps<{
   labelClass: 'w-[75%]',
   inputClass: 'w-[25%] h-5',
 });
+const texturePath = ref(props.texture);
+const fileInput = ref<HTMLInputElement | null>(null)
+const handleImageClick=() => {
+  fileInput.value?.click();
+}
+const handlefileChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (result && typeof result == 'string') {
+        props.onValueChanged(result);
+        texturePath.value = result;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+}
 </script>
 
 <template>
@@ -23,8 +43,9 @@ const props = withDefaults(defineProps<{
     <label :for="inputId" :class="labelClass">
       {{ labelText }}
     </label>
-    <span style="flex: none; width: 25%;" class="w-full relative">
-      <img v-if="texture != ''" :src="texture" alt="">
+    <span class="flex-grow cursor-pointer items-center h-16 w-16">
+      <img v-if="texture != ''" :src="texturePath" alt="" @click="handleImageClick" class="w-full h-full object-fill">
+      <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handlefileChange">
     </span>
   </div>
 </template>

@@ -55,7 +55,7 @@ function test_func_2() {
         <div class="card">
           <SectionPill name="Textures" />
           <div class="p-2">
-            <TextureInput labelText="Shape" inputId="shape" inputName="Shape" texture="./images/spark_01.png" :onValueChanged="test_func_1"
+            <TextureInput labelText="Shape" inputId="shape" inputName="Shape" v-model:texture="./images/spark_01.png" :onValueChanged="test_func_1"
             :onClick="test_func_2" />
             <ColorInput labelText="Shape" inputId="shape" inputName="Shape" color="#6659FF" :onValueChanged="test_func_1"
             :onClick="test_func_2" />
