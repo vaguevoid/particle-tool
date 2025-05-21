@@ -4,7 +4,7 @@ import ParticleInput from "./components/ParticleInput.vue";
 import SectionPill from "./components/SectionPill.vue";
 import CollapsibleSection from "./components/CollapsibleSection.vue";
 import ParticleCheckbox from "./components/ParticleCheckbox.vue";
-import Emitters from "./components/Emitters.vue";
+import EmitterGrid from "./components/EmitterGrid.vue";
 import textureInput from "./components/TextureInput.vue"
 import TextureInput from "./components/TextureInput.vue";
 import ColorInput from "./components/ColorInput.vue"
@@ -45,7 +45,7 @@ function test_func_2() {
         <!-- Emitters -->
         <div class="card">
           <SectionPill name="Emitters" />
-          <Emitters :emitters="['/images/spark_01.png', '/images/smoke_10.png','/images/muzzle_01.png']"/>
+          <EmitterGrid :emitters="['/images/spark_01.png', '/images/smoke_10.png','/images/muzzle_01.png']"/>
           <!-- <div class="p-2">
             Example: Emitter data goes here...
           </div> -->

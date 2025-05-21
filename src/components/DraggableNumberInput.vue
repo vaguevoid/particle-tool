@@ -13,7 +13,6 @@ const props = withDefaults(
     min?: number
     step?: number
     value?: number
-    leftText?: string
   }>(),
   { dragDirection: 'X', step: 1, min: -Infinity, max: Infinity, value: 0},
 )
@@ -70,7 +69,6 @@ function dragEnd(): void {
 <template>
   <div>
     <field-input style="flex: none; width: 100%;" class="w-full relative">
-      <span v-if="leftText" class="absolute left-2 text-gray-500 pointer-events-none">{{ leftText }}</span>
       <input
         type="number"
         :max="props.max"
@@ -78,7 +76,6 @@ function dragEnd(): void {
         :step="props.step"
         :value="props.value"
         @input="adjustValue(($event.target as HTMLInputElement).value)"
-        :style="{ paddingLeft: leftText ? '3rem' : '' }"
       >
       <i
         class="iconoir-settings p-1 text-pluetral-400"
