@@ -23,9 +23,7 @@ const props = withDefaults(defineProps<{
     <label :for="inputId" :class="labelClass">
       {{ labelText }}
     </label>
-    <span style="flex: none; width: 25%;" class="w-full relative">
-      <div class="color" :style="{ background: color }"></div>
-    </span>
+    <div class="color cursor-pointer" :style="{ background: color }"></div>
   </div>
 </template>
 

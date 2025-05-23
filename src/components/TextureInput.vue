@@ -43,7 +43,7 @@ const handlefileChange = (event: Event) => {
     <label :for="inputId" :class="labelClass">
       {{ labelText }}
     </label>
-    <span class="flex-grow cursor-pointer items-center h-16 w-16">
+    <span class="flex-grow cursor-pointer items-center h-18 w-16 border-[color:var(--pluetral-lm-300,#D2D1DB)] rounded-[1px] border-2 border-solid">
       <img v-if="texture != ''" :src="texturePath" alt="" @click="handleImageClick" class="w-full h-full object-fill">
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handlefileChange">
     </span>
