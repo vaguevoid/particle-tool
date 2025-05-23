@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 
 // Define the props our component will accept.
 const props = withDefaults(defineProps<{
@@ -16,6 +17,14 @@ const props = withDefaults(defineProps<{
   labelClass: 'w-[75%]',
   inputClass: 'w-[25%] h-5',
 });
+
+const colorInputRef = ref<HTMLInputElement | null>(null);
+const selectedColor = ref(props.color)
+const handleColorChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  props.onValueChanged(input.value);
+  selectedColor.value = input.value;
+};
 </script>
 
 <template>
@@ -23,15 +32,21 @@ const props = withDefaults(defineProps<{
     <label :for="inputId" :class="labelClass">
       {{ labelText }}
     </label>
-    <div class="color cursor-pointer" :style="{ background: color }"></div>
+    <div :class="inputClass">
+      <input
+        ref="colorInputRef"
+        type="color"
+        :id="inputId"
+        :name="inputName"
+        :value="selectedColor"
+        @input="handleColorChange"
+        class="w-0 h-0 absolute"
+      />
+      <div 
+        class="cursor-pointer h-full relative border-[color:var(--pluetral-lm-300,#D2D1DB)] rounded-[1px] border-2 border-solid" 
+        :style="{ background: selectedColor }"
+        @click="colorInputRef?.click()"
+      ></div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.color{
-  width: 28px;
-  height: 28px;
-  border-radius: 1px;
-  border: 2px solid var(--pluetral-lm-300, #D2D1DB);
-}
-</style>

@@ -5,7 +5,6 @@ import SectionPill from "./components/SectionPill.vue";
 import CollapsibleSection from "./components/CollapsibleSection.vue";
 import ParticleCheckbox from "./components/ParticleCheckbox.vue";
 import EmitterGrid from "./components/EmitterGrid.vue";
-import textureInput from "./components/TextureInput.vue"
 import TextureInput from "./components/TextureInput.vue";
 import ColorInput from "./components/ColorInput.vue"
 const gameScreenRef = ref<HTMLDivElement | null>(null);
@@ -193,6 +192,7 @@ main {
   border: 1px solid black;
   box-shadow: 2px 2px 0 0 black;
   background-color: white;
+  min-width: 300px
 }
 
 .fiasco .pill {
