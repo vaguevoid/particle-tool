@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, reactive } from "vue";
+import { Fs } from "@vaguevoid/tools";
 import ParticleInput from "./components/ParticleInput.vue";
 import SectionPill from "./components/SectionPill.vue";
 import CollapsibleSection from "./components/CollapsibleSection.vue";
@@ -16,16 +17,58 @@ const gameScreenStyle = computed(() => {
   };
 });
 
+const particleVariables = [
+  {
+    section: "Spawn",
+    items: ["Burst", "Amount", "Rate", "Angle", "Lifetime"]
+  },
+  {
+    section: "Speed",
+    items: ["Start Speed", "Acceleration", "Gravity"]
+  },
+  {
+    section: "Visibility",
+    items: ["Fade In", "Fade Out"]
+  },
+  {
+    section: "Rotation",
+    items: ["Rotation Speed"]
+  },
+  {
+    section: "Trail",
+    items: ["Trail Lifetime", "Trail Width", "Min Random", "Max Random"]
+  },
+];
+
+const particleState = reactive(
+  Object.fromEntries(
+    particleVariables.map(section => [
+      section.section,
+      Object.fromEntries(section.items.map(item => [item, 0]))
+    ])
+  )
+);
+
+async function saveParticleConfig() {
+  await Fs.writeFile(
+    "src/assets/particle-config.json",
+    JSON.stringify(particleState)
+  );
+  console.log("Particle config saved!");
+}
+
 onMounted(() => { });
 
 onUnmounted(() => { });
 
 function test_func_1() {
   console.log("test_func_1() called");
+  saveParticleConfig()
 }
 
 function test_func_2() {
   console.log("test_func_2() called");
+  saveParticleConfig()
 }
 
 </script>
@@ -96,76 +139,15 @@ function test_func_2() {
       <!------------ Right Panel ----------->
       <div class="flex-grow card h-full">
         <div>
-          <SectionPill name="Spawn"/>
+          <SectionPill name="Particles"/>
         </div>
 
-        <!----------- SPAWN  ----------->
-        <CollapsibleSection name="Spawn">
-
-          <ParticleCheckbox labelText="Burst" inputId="burst_spawn" inputName="Burst" :onValueChanged="test_func_1"
-            :onClick="test_func_2" />
-
-          <ParticleInput labelText="Rate" inputId="rate" inputName="Rate" :onValueChanged="test_func_1"
-            :onClick="test_func_2" />
-
-          <ParticleInput labelText="Lifetime" inputId="life" inputName="Life" :onValueChanged="test_func_1"
-            :onClick="test_func_2" />
-
-          <ParticleInput labelText="Angle" inputId="angle" inputName="Angle" :onValueChanged="test_func_1"
-            :onClick="test_func_2" />
-
-          <ParticleInput labelText="Points Forward" inputId="forward" inputName="forward" :onValueChanged="test_func_1"
-            :onClick="test_func_2" />
-        </CollapsibleSection>
-
-
-        <!----------- Speed  ----------->
-        <CollapsibleSection name="Speed">
-
-        <ParticleInput labelText="Start Speed" inputId="startSpeed" inputName="startSpeed"
-          :onValueChanged="test_func_1" :onClick="test_func_2" />
-
-        <ParticleInput labelText="End Speed" inputId="StartSpeed" inputName="StartSpeed" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-        </CollapsibleSection>
-
-        <!----------- Visibility  ----------->
-        <CollapsibleSection name="Visibility">
-
-        <ParticleInput labelText="Fade In" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Fade Out" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-        </CollapsibleSection>
-        
-
-        <!----------- Rotation  ----------->
-        <CollapsibleSection name="Rotation">
-        <ParticleInput labelText="Start Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Min Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Max Rand Rotation" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-        </CollapsibleSection>
-
-        <!----------- Trail  ----------->
-        <CollapsibleSection name="Trail">
-        <ParticleInput labelText="Trail Lifetime" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Trail Width" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Min Random" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-
-        <ParticleInput labelText="Max Random" inputId="FadeIn" inputName="FadeIn" :onValueChanged="test_func_1"
-          :onClick="test_func_2" />
-        </CollapsibleSection>
+        <span v-for="map in particleVariables">
+          <CollapsibleSection :name="map.section">
+            <ParticleInput v-for="item in map.items" :labelText="item" :inputId="item.toLowerCase()" :inputName="item" :onValueChanged="test_func_1"
+              :onClick="test_func_2" v-model="particleState[map.section][item]"/>
+          </CollapsibleSection>
+        </span>
       </div>
     </div>
   </main>

@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
       :id="inputId"
       :name="inputName"
       :class="inputClass"
-      @value-changed="onValueChanged"
+      @valueChanged="onValueChanged"
       @click="onClick"
     />
 </div>
