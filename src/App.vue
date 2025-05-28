@@ -17,42 +17,31 @@ const gameScreenStyle = computed(() => {
   };
 });
 
-const particleVariables = [
-  {
-    section: "Spawn",
-    items: ["Burst", "Amount", "Rate", "Angle", "Lifetime"]
-  },
-  {
-    section: "Speed",
-    items: ["Start Speed", "Acceleration", "Gravity"]
-  },
-  {
-    section: "Visibility",
-    items: ["Fade In", "Fade Out"]
-  },
-  {
-    section: "Rotation",
-    items: ["Rotation Speed"]
-  },
-  {
-    section: "Trail",
-    items: ["Trail Lifetime", "Trail Width", "Min Random", "Max Random"]
-  },
-];
+const particleVariables = {
+  Spawn: ["Burst", "Amount", "Rate", "Angle", "Lifetime"],
+  Speed: ["Start Speed", "Acceleration", "Gravity"],
+  Visibility: ["Fade In", "Fade Out"],
+  Rotation: ["Rotation Speed"],
+  Trail: ["Trail Lifetime", "Trail Width", "Min Random", "Max Random"],
+};
 
 const particleState = reactive(
   Object.fromEntries(
-    particleVariables.map(section => [
-      section.section,
-      Object.fromEntries(section.items.map(item => [item, 0]))
+    Object.entries(particleVariables).map(([section, items]) => [
+      section,
+      Object.fromEntries(items.map(item => [item, 0]))
     ])
   )
 );
 
 async function saveParticleConfig() {
+  let state = ""
+  for (const key in particleState) {
+    state += JSON.stringify(particleState[key])
+  }
   await Fs.writeFile(
     "src/assets/particle-config.json",
-    JSON.stringify(particleState)
+    state
   );
   console.log("Particle config saved!");
 }
@@ -63,12 +52,10 @@ onUnmounted(() => { });
 
 function test_func_1() {
   console.log("test_func_1() called");
-  saveParticleConfig()
 }
 
 function test_func_2() {
   console.log("test_func_2() called");
-  saveParticleConfig()
 }
 
 </script>
@@ -142,10 +129,12 @@ function test_func_2() {
           <SectionPill name="Particles"/>
         </div>
 
-        <span v-for="map in particleVariables">
-          <CollapsibleSection :name="map.section">
-            <ParticleInput v-for="item in map.items" :labelText="item" :inputId="item.toLowerCase()" :inputName="item" :onValueChanged="test_func_1"
-              :onClick="test_func_2" v-model="particleState[map.section][item]"/>
+        <span v-for="(items, section) in particleVariables">
+          <CollapsibleSection :name="section">
+            <ParticleInput v-for="item in items" :labelText="item" :inputId="item.toLowerCase()" :inputName="item" :onValueChanged="(newValue) => {
+              particleState[section][item] = newValue;
+              saveParticleConfig()
+            }" :onClick="test_func_2"/>
           </CollapsibleSection>
         </span>
       </div>
